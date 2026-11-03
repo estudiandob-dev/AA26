@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller de Auditoría de Accesibilidad - Cátedra PLP III</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #1e293b;
+        }
+
+        :focus-visible {
+            outline: 3px solid #1d4ed8;
+            outline-offset: 2px;
+        }
+
+        .texto-bajo-contraste {
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .btn-falso {
+            background-color: #1d4ed8;
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+            display: inline-block;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .tarjeta {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .btn-eliminar {
+            margin-left: 10px;
+            padding: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        input[type="email"] {
+            padding: 8px;
+            width: 100%;
+            max-width: 350px;
+            box-sizing: border-box;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Portal de Compras - Ejercicio de Auditoría</h1>
+    </header>
+
+    <main>
+
+        <h2>Catálogo de Productos Destacados</h2>
+
+        <section class="tarjeta" aria-labelledby="titulo-producto">
+
+            <img src="https://www.ucp.edu.ar/wp-content/themes/ucp23/lib/ucp/img/universidad-cuenca-plata.svg"
+                width="100" alt="Logo de la Universidad de la Cuenca del Plata">
+
+            <h3 id="titulo-producto">Auriculares Inalámbricos</h3>
+
+            <p class="texto-bajo-contraste">Stock disponible: 5 unidades en depósito central.</p>
+
+
+            <button type="button" class="btn-falso" id="btn-agregar">
+                Agregar al Carrito
+            </button>
+
+            <button type="button" class="btn-eliminar" aria-label="Eliminar Auriculares Inalámbricos del carrito">
+                <span style="font-size: 1.2rem;" aria-hidden="true">🗑️</span>
+            </button>
+        </section>
+
+        <section class="tarjeta" aria-labelledby="titulo-suscripcion">
+            <h2 id="titulo-suscripcion">Suscripción a Novedades</h2>
+
+            <form id="form-suscripcion">
+
+                <div style="margin-bottom: 10px;">
+                    <label for="email-user">Correo electrónico</label>
+                    <input type="email" id="email-user" name="email" placeholder="ejemplo@correo.com"
+                        autocomplete="email" required>
+                </div>
+
+                <button type="submit" id="btn-enviar">Suscribirme</button>
+            </form>
+
+            <div id="resultado-servidor" role="status" aria-live="polite" aria-atomic="true"
+                style="margin-top: 15px; font-weight: bold;"></div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('btn-agregar').addEventListener('click', () => {
+            alert('Producto agregado');
+        });
+
+        document.getElementById('form-suscripcion').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('btn-enviar');
+            const respuestaUI = document.getElementById('resultado-servidor');
+
+            btn.disabled = true;
+            btn.setAttribute('aria-busy', 'true');
+            respuestaUI.textContent = "Conectando con el servidor...";
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                respuestaUI.textContent = "¡Suscripción confirmada con éxito en la base de datos!";
+            } catch (error) {
+                respuestaUI.textContent = "No se pudo completar la suscripción. Intente nuevamente.";
+            } finally {
+                btn.disabled = false;
+                btn.removeAttribute('aria-busy');
+            }
+        });
+    </script>
+</body>
+
+</html>
